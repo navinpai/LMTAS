@@ -29,8 +29,8 @@
     </span>)
       </div>
   <div  class="table">
-  {% for message in balances %}
-    <div class=flash>{{ message }}</div>
+  {% for person in balances.keys() %}
+  <div class=flash><span class="person">{{ person.title() }}</span> Rs. {{ balances[person] }}</span></div>
   {% endfor %}
   </div>
       <div class="main-title">
@@ -38,7 +38,7 @@
       </div>
   <div  class="table">
       {% for message in txns %}
-        <div class=flash>{{ message }}</div>
+      <div class=flash>{{ message['txnPT'] }}</div>
       {% endfor %}
   </div>
   <div class="new">

@@ -105,3 +105,8 @@ body {
     margin-left: 40%;
     margin-bottom: 25px;
 }
+
+.person {
+    font-weight: bold;
+    margin-right: 10px;
+}

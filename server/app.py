@@ -14,6 +14,14 @@ import constants
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 
+def get_db_connection():
+    return pymysql.connect(host='localhost', \
+                         user=constants.MYSQL_USERNAME, \
+                         password=constants.MYSQL_PASSWORD, \
+                         db='gohack', \
+                         charset='utf8mb4', \
+                         cursorclass=pymysql.cursors.DictCursor)
+
 def kairos_identify(img_file):
     kairos_face.settings.app_id = constants.KAIROS_APPID
     kairos_face.settings.app_key = constants.KAIROS_APPKEY
@@ -23,12 +31,7 @@ def kairos_identify(img_file):
 
 def make_db_entries(identified_people, userName, amount, img_link):
     individual_share = amount * 1.0 / len(identified_people)
-    connection = pymysql.connect(host='localhost', \
-                         user=constants.MYSQL_USERNAME, \
-                         password=constants.MYSQL_PASSWORD, \
-                         db='gohack', \
-                         charset='utf8mb4', \
-                         cursorclass=pymysql.cursors.DictCursor)
+    connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
             for person in identified_people:
@@ -55,12 +58,43 @@ def recognize_faces(img_file, faceCoords):
 
     return list(identified_faces), len(faceCoords)
 
+def getUserTxnDetails(user):
+    connection = get_db_connection()
+    result = []
+    try:
+        with connection.cursor() as cursor:
+            sql = 'SELECT * from `txns` where `payee`= %s or `payer`=%s order by id DESC'
+            cursor.execute(sql, (user,user))
+            result = cursor.fetchall();
+    finally:
+        connection.close()
+ 
+    txnStrings = []
+    balances = {}
+    total = 0.0
+    for txn in result:
+        if(txn["payer"] == user):
+            total = total + txn['amount']
+            if(txn['payee'] in balances):
+                balances[txn['payee']] = balances[txn['payee']] + txn['amount']
+            else:
+                balances[txn['payee']] = txn['amount']
+            txnPT = "You lent Rs." + str(txn["amount"]) +" to "+ txn["payee"].title()
+        else:
+            total = total - txn['amount']
+            if(txn['payer'] in balances):
+                balances[txn['payer']] = balances[txn['payer']] - txn['amount']
+            else:
+                balances[txn['payer']] = txn['amount']
+            txnPT = txn["payer"].title() + " lent you Rs." + str(txn["amount"])
+        txnImg = txn["img"]
+        txnStrings.append({'txnPT': txnPT, 'txnImg': txnImg})
+    return (balances, txnStrings, total)
+
 @app.route('/home')
 def home():
-    entries = ["Shubham owes you Rs. 100", "Vishesh owes you Rs. 350", "You owe Archana 300", "You owe Vishesh Rs. 150"]
-    balances = entries + entries
-    txns = entries + entries
-    return render_template('index.html', balances=balances, txns=txns, total=3500) 
+    (balances, txns, total) = getUserTxnDetails("archana")
+    return render_template('index.html', balances=balances, txns=txns, total=total) 
 
 @app.route('/add')
 def add():
@@ -130,6 +164,8 @@ def getMys():
 
 @app.route('/getDetails')
 def getDetails():
+    lastTxns = getLastTxns();
+    balances = getBalances();
     dummy_response = {"lastTransactions":["Shubham owes you Rs. 100", "Vishesh owes you Rs. 350", "You owe Archana 300", "You owe Vishesh Rs. 150"], "balances": [{"Archana": "+4300"}, {"Vishesh": "-2300"}, {"Shubham": "+4750" }]}
     return json.dumps(dummy_response)
 
