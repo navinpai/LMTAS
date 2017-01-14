@@ -51,7 +51,7 @@ def recognize_faces(img_file, faceCoords):
         cropped.save(tempImg)
 
         result = kairos_identify(tempImg)
-        if len(result > 0):
+        if len(result) > 0:
             identified_faces.add(result[0].subject)
 
     return list(identified_faces), len(faceCoords)
