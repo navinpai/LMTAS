@@ -34,11 +34,12 @@ def make_db_entries(identified_people, userName, amount, img_link):
             for person in identified_people:
                 if person != userName:
                     sql = "INSERT  into `txns` (`payer`, `payee`, `img`, `amount`) values (%s, %s, %s, %s)"
-                    cursor.execute(sql, (userName, person, "AAAAAA", str(individual_share)))
+                    cursor.execute(sql, (userName, person, img_link, str(individual_share)))
         connection.commit()
-        return "SUCCESS!"
+        return 0
     finally:
         connection.close()
+        return -1
 
 
 def recognize_faces(img_file, faceCoords):
@@ -46,8 +47,8 @@ def recognize_faces(img_file, faceCoords):
     identified_faces = set()
     for face in faceCoords:
         faceRect = face['faceRectangle']
-        cropped = imgMain.crop((faceRect['left'] - 10, faceRect['top'] - 10, faceRect['left'] + faceRect['width'] + 10, faceRect['top']+faceRect['height'] + 10))
-        tempImg = os.path.join(app.config['UPLOAD_FOLDER'], "tempFace.jpg")
+        cropped = imgMain.crop((faceRect['left'] - 10, faceRect['top'] - 10, faceRect['left'] + faceRect['width'] + 10, faceRect['top'] + faceRect['height'] + 10))
+        tempImg = os.path.join(app.config['UPLOAD_FOLDER'], 'tempFace.jpg')
         cropped.save(tempImg)
 
         result = kairos_identify(tempImg)
@@ -83,8 +84,10 @@ def upload():
         else:
             success = True
             if(len(identified_people) == num_of_faces):
-                message = 'Success! Get Back to the party!'
-                make_db_entries(identified_people, user, float(amount), img_title)
+                message = 'Identified all faces! Adding to DB'
+                flag = make_db_entries(identified_people, user, float(amount), img_title)
+                if(flas == 0)
+                    message = 'Success! Get Back to the party!'
             else:
                 message = 'Couldn\'t recognize all faces . Manual intervention required! :('
     else:
