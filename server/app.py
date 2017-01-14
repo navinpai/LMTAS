@@ -12,13 +12,14 @@ def hello_world():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    file = request.files['file']
-    if file:
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    imgData = request.form['file']
+    if imgData:
+        filename = secure_filename("pic.jpg")
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), "wb") as fh:
+            fh.write(imgData.decode('base64'))
         return 'Image Saved'
 
-    return 'Dafuq? No File!'
+    return 'Dafuq? No Image Data Sent!'
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=1337)
