@@ -26,8 +26,7 @@ def enroll_face(subject_id, gallery_name, url=None, file=None, additional_argume
         raise exceptions.ServiceRequestError(response.status_code, json_response, payload)
 
     image_response = json_response['images'][0]
-    return image_response['transaction']['face_id'], _normalize_attributes(image_response['attributes'])
-
+    return image_response['transaction']['subject_id'], image_response['transaction']['status']
 
 def _normalize_attributes(raw_attributes):
     return {k: _normalize_confidence(v) for k, v in raw_attributes.items()}
