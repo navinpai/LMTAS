@@ -3,6 +3,7 @@ from flask import Flask, request
 import cognitive_face as CF
 import pymysql.cursors
 from PIL import Image
+import random
 import json
 import os
 
