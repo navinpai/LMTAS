@@ -70,7 +70,6 @@ def upload():
         filename = secure_filename(img_title)
         with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as fh:
             fh.write(imgData.decode('base64'))
-        return 'Image Saved'
         
         KEY = constants.MS_OXFORD_KEY
         CF.Key.set(KEY) 
@@ -87,10 +86,9 @@ def upload():
                 make_db_entries(identified_people, userName, amount)
             else:
                 message = 'Couldn\'t recognize all faces . Manual intervention required! :('
-
-            return "error"
-
-    return 'Dafuq? No Image Data Sent!'
+    else:
+        message = 'Dafuq? No Image Data Sent!'
+    return {"success": success, "message": message}
 
 @app.route("/test")
 def getMys():
