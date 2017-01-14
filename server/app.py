@@ -86,7 +86,7 @@ def upload():
             if(len(identified_people) == num_of_faces):
                 message = 'Identified all faces! Adding to DB'
                 flag = make_db_entries(identified_people, user, float(amount), img_title)
-                if(flas == 0)
+                if(flag == 0):
                     message = 'Success! Get Back to the party!'
             else:
                 message = 'Couldn\'t recognize all faces . Manual intervention required! :('
