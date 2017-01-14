@@ -36,10 +36,8 @@ def make_db_entries(identified_people, userName, amount, img_link):
                     sql = "INSERT  into `txns` (`payer`, `payee`, `img`, `amount`) values (%s, %s, %s, %s)"
                     cursor.execute(sql, (userName, person, img_link, str(individual_share)))
         connection.commit()
-        return 0
     finally:
         connection.close()
-        return -1
 
 
 def recognize_faces(img_file, faceCoords):
@@ -84,10 +82,8 @@ def upload():
         else:
             success = True
             if(len(identified_people) == num_of_faces):
-                message = 'Identified all faces! Adding to DB'
-                flag = make_db_entries(identified_people, user, float(amount), img_title)
-                if(flag == 0):
-                    message = 'Success! Get Back to the party!'
+                message = 'Success! Get Back to the party!'
+                make_db_entries(identified_people, user, float(amount), img_title)
             else:
                 message = 'Couldn\'t recognize all faces . Manual intervention required! :('
     else:
