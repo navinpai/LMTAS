@@ -1,43 +1,37 @@
-from flask import Flask, request
 from werkzeug.utils import secure_filename
-import os
-import pymysql.cursors
-import json
+from flask import Flask, request
 import cognitive_face as CF
+import pymysql.cursors
 from PIL import Image
-import constants
+import json
+import os
+
 import kairos_face
+import constants
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 
-def identify_people(img_title):
-    # TODO
-    return ["navin", "archana", "vishesh"]
-
 def kairos_identify(img_file):
     kairos_face.settings.app_id = constants.KAIROS_APPID
     kairos_face.settings.app_key = constants.KAIROS_APPKEY
-    #with open(img_file, 'rb') as image_file:
     recognized_faces = kairos_face.recognize_face('actors', file=img_file)
 
     return recognized_faces
-    # Printing the recognized face candidates info
-    for face_candidate in recognized_faces:
-        print('{}: {}'.format(face_candidate.subject, face_candidate.confidence))
 
 def recognize_faces(img_file, faceCoords):
     imgMain = Image.open(img_file)
+    identified_faces = set()
     for face in faceCoords:
         faceRect = face['faceRectangle']
         cropped = imgMain.crop((faceRect['left'] - 10, faceRect['top'] - 10, faceRect['left'] + faceRect['width'] + 10, faceRect['top']+faceRect['height'] + 10))
         tempImg = os.path.join(app.config['UPLOAD_FOLDER'], "tempFace.jpg")
         cropped.save(tempImg)
 
-        result = kairos_identify(tempImg)
+        result = kairos_identify(tempImg)[0]
+        identified_faces.add(result.subject)
 
-        import pdb;pdb.set_trace()
-    return ["navin", "archana", "vishesh"]
+    return list(identified_faces)
 
 @app.route('/')
 def hello_world():

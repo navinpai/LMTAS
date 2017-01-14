@@ -33,7 +33,6 @@ def recognize_face(gallery_name, url=None, file=None, additional_arguments={}):
 
 
 def _subject_from_first_response(first_response):
-    import pdb;pdb.set_trace()
     return RecognizedFaceCandidate(
         first_response['transaction']['subject_id'],
         float(first_response['transaction']['confidence'])
