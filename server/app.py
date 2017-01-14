@@ -84,7 +84,7 @@ def upload():
             success = True
             if(len(identified_people) == num_of_faces):
                 message = 'Success! Get Back to the party!'
-                make_db_entries(identified_people, user, amount)
+                make_db_entries(identified_people, user, amount, img_title)
             else:
                 message = 'Couldn\'t recognize all faces . Manual intervention required! :('
     else:
