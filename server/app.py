@@ -50,8 +50,9 @@ def recognize_faces(img_file, faceCoords):
         tempImg = os.path.join(app.config['UPLOAD_FOLDER'], "tempFace.jpg")
         cropped.save(tempImg)
 
-        result = kairos_identify(tempImg)[0]
-        identified_faces.add(result.subject)
+        result = kairos_identify(tempImg)
+        if len(result > 0):
+            identified_faces.add(result[0].subject)
 
     return list(identified_faces), len(faceCoords)
 
@@ -83,7 +84,7 @@ def upload():
             success = True
             if(len(identified_people) == num_of_faces):
                 message = 'Success! Get Back to the party!'
-                make_db_entries(identified_people, userName, amount)
+                make_db_entries(identified_people, user, amount)
             else:
                 message = 'Couldn\'t recognize all faces . Manual intervention required! :('
     else:
