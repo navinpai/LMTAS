@@ -22,7 +22,7 @@ def kairos_identify(img_file):
     return recognized_faces
 
 def make_db_entries(identified_people, userName, amount, img_link):
-    individual_share = amount / len(identified_people)
+    individual_share = amount * 1.0 / len(identified_people)
     connection = pymysql.connect(host='localhost', \
                          user=constants.MYSQL_USERNAME, \
                          password=constants.MYSQL_PASSWORD, \
@@ -33,10 +33,10 @@ def make_db_entries(identified_people, userName, amount, img_link):
         with connection.cursor() as cursor:
             for person in identified_people:
                 if person != userName:
-                    sql = "INSERT  into `txns` (payer, payee, img, amount) values(%s,%s,%s,%f)" # WHERE `email`=%s"
-            cursor.execute(sql, (userName, person, "AAAAAA", individual_share))
-            result = cursor.fetchone()
-            return json.dumps(result)
+                    sql = "INSERT  into `txns` (`payer`, `payee`, `img`, `amount`) values (%s, %s, %s, %s)"
+                    cursor.execute(sql, (userName, person, "AAAAAA", str(individual_share)))
+        connection.commit()
+        return "SUCCESS!"
     finally:
         connection.close()
 
@@ -89,7 +89,7 @@ def upload():
                 message = 'Couldn\'t recognize all faces . Manual intervention required! :('
     else:
         message = 'Dafuq? No Image Data Sent!'
-    return {"success": success, "message": message}
+    return json.dumps({"success": success, "message": message})
 
 @app.route("/test")
 def getMys():

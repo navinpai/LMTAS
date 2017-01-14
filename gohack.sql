@@ -27,7 +27,7 @@ CREATE TABLE `txns` (
   `payer` varchar(100) DEFAULT NULL,
   `payee` varchar(100) DEFAULT NULL,
   `img` varchar(10) DEFAULT NULL,
-  `amount` double(5,2) DEFAULT NULL,
+  `amount` double(9,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
