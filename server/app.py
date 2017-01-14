@@ -12,7 +12,6 @@ def hello_world():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    import pdb;pdb.set_trace()
     file = request.files['file']
     if file:
         filename = secure_filename(file.filename)
