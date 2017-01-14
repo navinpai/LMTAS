@@ -19,6 +19,26 @@ def kairos_identify(img_file):
 
     return recognized_faces
 
+def make_db_entries(identified_people, userName, amount, img_link):
+    individual_share = amount / len(identified_people)
+    connection = pymysql.connect(host='localhost', \
+                         user=constants.MYSQL_USERNAME, \
+                         password=constants.MYSQL_PASSWORD, \
+                         db='gohack', \
+                         charset='utf8mb4', \
+                         cursorclass=pymysql.cursors.DictCursor)
+    try:
+        with connection.cursor() as cursor:
+            for person in identified_people:
+                if person != userName:
+                    sql = "INSERT  into `txns` (payer, payee, img, amount) values(%s,%s,%s,%f)" # WHERE `email`=%s"
+            cursor.execute(sql, (userName, person, "AAAAAA", individual_share))
+            result = cursor.fetchone()
+            return json.dumps(result)
+    finally:
+        connection.close()
+
+
 def recognize_faces(img_file, faceCoords):
     imgMain = Image.open(img_file)
     identified_faces = set()
@@ -31,7 +51,7 @@ def recognize_faces(img_file, faceCoords):
         result = kairos_identify(tempImg)[0]
         identified_faces.add(result.subject)
 
-    return list(identified_faces)
+    return list(identified_faces), len(faceCoords)
 
 @app.route('/')
 def hello_world():
@@ -39,11 +59,14 @@ def hello_world():
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    success = False
     imgData = request.form['file']
+    value = request.form['amount']
+    user = request.form['userName']
     img_title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
     if imgData:
         filename = secure_filename(img_title)
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), "wb") as fh:
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as fh:
             fh.write(imgData.decode('base64'))
         return 'Image Saved'
         
@@ -51,22 +74,18 @@ def upload():
         CF.Key.set(KEY) 
         img_file = os.path.join(app.config['UPLOAD_FOLDER'], img_title)
         result = CF.face.detect(img_file)
-        identified_people = recognize_faces(img_file, result)
-        connection = pymysql.connect(host='localhost', \
-                             user=constants.MYSQL_USERNAME, \
-                             password=constants.MYSQL_PASSWORD, \
-                             db='gohack', \
-                             charset='utf8mb4', \
-                             cursorclass=pymysql.cursors.DictCursor)
-        try:
-            with connection.cursor() as cursor:
-            # Read a single record
-                sql = "SELECT `id`FROM `txns`" # WHERE `email`=%s"
-                cursor.execute(sql) #, ('webmaster@python.org',))
-                result = cursor.fetchone()
-                return json.dumps(result)
-        finally:
-            connection.close()
+        (identified_people, num_of_faces) = recognize_faces(img_file, result)
+
+        if num_of_faces < 1:
+            message = 'Could not make out any faces! Try with better light or crisper photos'
+        else:
+            success = True
+            if(len(identified_people) == num_of_faces)
+                message = 'Success! Get Back to the party!'
+                make_db_entries(identified_people, userName, amount)
+            else:
+                message = 'Couldn\'t recognize all faces . Manual intervention required! :('
+
             return "error"
 
     return 'Dafuq? No Image Data Sent!'
