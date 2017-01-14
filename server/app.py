@@ -110,6 +110,38 @@ def enroll():
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    success = False
+    imgData = request.form['file']
+    amount = request.form['amount']
+    user = request.form['userName']
+    img_title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
+    if imgData:
+        filename = secure_filename(img_title)
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as fh:
+            fh.write(imgData.decode('base64'))
+        
+        KEY = constants.MS_OXFORD_KEY
+        CF.Key.set(KEY) 
+        img_file = os.path.join(app.config['UPLOAD_FOLDER'], img_title)
+        result = CF.face.detect(img_file)
+        (identified_people, num_of_faces) = recognize_faces(img_file, result)
+
+        if num_of_faces < 1:
+            message = 'Could not make out any faces! Try with better light or crisper photos'
+        else:
+            success = True
+            if(len(identified_people) == num_of_faces):
+                message = 'Success! Get Back to the party!'
+                make_db_entries(identified_people, user, float(amount), img_title)
+            else:
+                message = 'Couldn\'t recognize all faces . Manual intervention required! :('
+    else:
+        message = 'Dafuq? No Image Data Sent!'
+    return json.dumps({"success": success, "message": message})
+
+    
+@app.route('/enrollNew', methods=['POST'])
+def enrollNew():
     headers = {'content-type': 'application/json', 'app_key': constants.KAIROS_APPKEY, 'app_id':constants.KAIROS_APPID}
 
     body = {'subject_id': request.form['person'], 'image': request.form['file'], 'gallery':'testGal'}
