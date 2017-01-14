@@ -80,7 +80,7 @@ def upload():
             message = 'Could not make out any faces! Try with better light or crisper photos'
         else:
             success = True
-            if(len(identified_people) == num_of_faces)
+            if(len(identified_people) == num_of_faces):
                 message = 'Success! Get Back to the party!'
                 make_db_entries(identified_people, userName, amount)
             else:
