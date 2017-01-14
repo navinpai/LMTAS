@@ -164,10 +164,9 @@ def getMys():
 
 @app.route('/getDetails')
 def getDetails():
-    lastTxns = getLastTxns();
-    balances = getBalances();
-    dummy_response = {"lastTransactions":["Shubham owes you Rs. 100", "Vishesh owes you Rs. 350", "You owe Archana 300", "You owe Vishesh Rs. 150"], "balances": [{"Archana": "+4300"}, {"Vishesh": "-2300"}, {"Shubham": "+4750" }]}
-    return json.dumps(dummy_response)
+    (balances, txns, total) = getUserTxnDetails("navin")
+    response = {"lastTransactions": txns, "balances": balances, "total": total} 
+    return json.dumps(response)
 
 
 if __name__ == '__main__':
