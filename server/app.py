@@ -64,7 +64,7 @@ def hello_world():
 def upload():
     success = False
     imgData = request.form['file']
-    value = request.form['amount']
+    amount = request.form['amount']
     user = request.form['userName']
     img_title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
     if imgData:
