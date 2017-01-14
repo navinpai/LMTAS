@@ -21,7 +21,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_home" />
+    <include layout="@layout/content_home"
+        android:id="@+id/include" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -30,21 +31,62 @@
         android:layout_gravity="bottom|end"
         android:tint="@android:color/white"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:srcCompat="@android:drawable/ic_menu_upload" />
 
-    <android.support.design.widget.FloatingActionButton
+   <!-- <android.support.design.widget.FloatingActionButton
         android:id="@+id/lfab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:tint="@android:color/white"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        app:srcCompat="@android:drawable/ic_menu_gallery" /> -->
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="441dp"
-        android:layout_marginTop="100sp"
+        android:layout_marginTop="200sp"
         android:id="@+id/tList" />
+
+    <TextView
+        android:text="Balances"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="90sp"
+        android:gravity="center"
+        android:id="@+id/balance"
+        app:layout_anchor="@+id/toolbar"
+        android:layout_gravity="center_vertical"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-condensed" />
+
+    <TextView
+        android:text="Total"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="30sp"
+        android:gravity="center"
+        android:id="@+id/total"
+        app:layout_anchor="@+id/toolbar"
+        android:layout_gravity="center_vertical"
+        android:textSize="26sp"
+        android:fontFamily="sans-serif-condensed" />
+
+  <!--  <TextView
+        android:text="Balance"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:gravity="bottom|center"
+        android:id="@+id/txns"
+        app:layout_anchor="@+id/toolbar"
+        android:layout_gravity="center_vertical"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-condensed" /> -->
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="300sp"
+        android:id="@+id/bList" />
 
 </android.support.design.widget.CoordinatorLayout>
