@@ -1,0 +1,107 @@
+@font-face {
+    font-family: 'prismaregular';
+    src: url('prisma-webfont.woff2') format('woff2'),
+         url('prisma-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body {
+    background: url("https://subtlepatterns.com/patterns/connect.png");
+    font-family: 'Roboto', Helvetica, Arial, sans-serif
+    color: #ff0000;
+}
+
+.title-bar {
+    position: absolute;
+    width: 100%;
+    height: 120px;
+    background-color: #F7B733;
+    border-bottom: 2px solid #FC4A1A;
+}
+
+.title-text {
+   font-family: 'prismaregular', Helvetica, Arial, sans-serif;
+   width: 100%;
+   font-size: 80px;
+   color: #FC4A1A;
+   text-align: center;
+   margin-left: auto;
+   margin-right: auto;
+   position: absolute;
+}
+
+.metanav {
+    position: relative;
+    float:right;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.content {
+    position: absolute;
+    width: 100%;
+    margin-top: 150px;
+}
+
+.main-title{
+    font-family: 'Righteous', cursive;
+    width: 100%;
+    font-size: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.table {
+  background-color: #fff;
+  max-height: 100px;
+  position: relative;
+  width: 600px;
+  margin-left: 30%;
+  overflow-y: auto;
+}
+
+.flash {
+    padding-left: 20px;
+    border: 1px solid #DFDCE3;
+}
+
+.footer{
+    bottom: 0px;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.red {
+ color: #d9534f;
+}
+
+.green {
+  color: #419641;
+}
+
+.total{
+  color: #ccc;
+  font-size: 14px;
+}
+
+.new-txn {
+  font-size: 20px;
+}
+
+
+.new {
+    text-align: center;
+}
+
+.selector{
+    margin-left: 40%;
+    margin-bottom: 25px;
+}

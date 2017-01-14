@@ -1,5 +1,5 @@
 from werkzeug.utils import secure_filename
-from flask import Flask, request
+from flask import Flask, request, render_template
 import cognitive_face as CF
 import pymysql.cursors
 from PIL import Image
@@ -55,9 +55,17 @@ def recognize_faces(img_file, faceCoords):
 
     return list(identified_faces), len(faceCoords)
 
-@app.route('/')
-def hello_world():
-    return 'Team FifthEye!'
+@app.route('/home')
+def home():
+    entries = ["Shubham owes you Rs. 100", "Vishesh owes you Rs. 350", "You owe Archana 300", "You owe Vishesh Rs. 150"]
+    balances = entries + entries
+    txns = entries + entries
+    return render_template('index.html', balances=balances, txns=txns, total=3500) 
+
+@app.route('/add')
+def add():
+    return render_template('add_new.html') 
+
 
 @app.route('/upload', methods=['POST'])
 def upload():
