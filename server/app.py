@@ -8,7 +8,8 @@ import string
 import random
 import json
 import os
-
+import pyfcm
+from pyfcm import FCMNotification
 import kairos_face
 import constants
 
@@ -43,6 +44,12 @@ def make_db_entries(identified_people, userName, amount, img_link):
     finally:
         connection.close()
 
+def firebase_notify(identified_users, user):
+    push_service = FCMNotification(api_key=constants.FIREBASE_API_KEY)
+    message_title = "Update: " + user + " has added a new bill with you!"
+    message_body = "Update: " + user + " has added a new bill with you!"
+    #for user in identified_users:
+    result = push_service.notify_topic_subscribers(topic_name="updates", message_title=message_title,  message_body=message_body)
 
 def recognize_faces(img_file, faceCoords):
     imgMain = Image.open(img_file)
@@ -150,6 +157,40 @@ def upload():
         message = 'Dafuq? No Image Data Sent!'
     return json.dumps({"success": success, "message": message})
 
+@app.route('/addNew', methods=['POST'])
+def addNew():
+    import pdb;pdb.set_trace()
+    img=request.files['file']
+    user = request.form['user']
+    img_title = "ENR" + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
+    if img:
+        filename = secure_filename(img_title)
+        img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+        KEY = constants.MS_OXFORD_KEY
+        CF.Key.set(KEY) 
+        img_file = os.path.join(app.config['UPLOAD_FOLDER'], img_title)
+        result = CF.face.detect(img_file)
+        (identified_people, num_of_faces, fallback) = recognize_faces(img_file, result)
+
+        if num_of_faces < 1:
+            message = 'Could not make out any faces! Try with better light or crisper photos'
+        else:
+            success = True
+            if(len(identified_people) == num_of_faces):
+                message = 'Success! Get Back to the party!'
+                firebase_notify(identified_users, user)
+                make_db_entries(identified_people, user, float(amount), img_title)
+            else:
+                if(user not in identified_people):
+                    firebase_notify(identified_users)
+                    make_db_entries(identified_people + [user], user, float(amount), img_title)
+                    message = 'Was some work, but got it done!'
+                else:
+                    message = 'Couldn\'t recognize all faces . Manual intervention required! :('
+    else:
+        message = 'Dafuq? No Image Data Sent!'
+    return json.dumps({"success": success, "message": message})
     
 @app.route('/enrollNew', methods=['POST'])
 def enrollNew():

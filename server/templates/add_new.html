@@ -23,10 +23,32 @@
       </div>
   <div class="new">
   <form id="upload_form">
-    <input class="selector" type="file" name="pic" accept="image/*">
-  <input type="submit" class="new-txn btn btn-warning" value="SUBMIT!"/>
-  </div>
+    <input class="selector" type="file" name="file" accept="image/*">
+    <input class="selector-text" type="text" name="amount" placeholder="bill amount">
+    <input type="hidden" name="person" value="arch">
+    <div>
+    <input type="submit" id="submit" class="new-txn btn btn-warning" value="SUBMIT!"/>
+    </div>
+    </div>
   </div>
 
+<script>
+$(document).ready(function(){
+    $("#submit").click(function(e){
+       e.preventDefault(); 
+       
+       $.ajax({
+           type: "POST",
+           url: "/addNew",
+           data: new FormData($("#upload_form")[0]),
+           processData: false,
+           contentType: false,
+           success: function (data) {
+                   alert(data)
+               }
+       });
+    });
+});
+</script>
   <div class="footer"> crafted with <span class="red">&hearts;</span> by <a href="http://twitter.com/navinpai">@navinpai</a></div>
 </div>

@@ -34,17 +34,6 @@
   <div class="footer"> crafted with <span class="red">&hearts;</span> by <a href="http://twitter.com/navinpai">@navinpai</a></div>
 </div>
 <script>
-function getBase64(file) {
-   var reader = new FileReader();
-   reader.readAsDataURL(file);
-   reader.onload = function () {
-        console.log(reader.result);
-      };
-   reader.onerror = function (error) {
-        console.log('Error: ', error);
-      };
-}
-
 $(document).ready(function(){
     $("#submit").click(function(e){
        e.preventDefault(); 
