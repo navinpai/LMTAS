@@ -105,7 +105,7 @@ def getUserTxnDetails(user):
 
 @app.route('/home')
 def home():
-    (balances, txns, total) = getUserTxnDetails("archana")
+    (balances, txns, total) = getUserTxnDetails("Arch")
     return render_template('index.html', balances=balances, txns=txns, total=total) 
 
 @app.route('/add')
@@ -118,7 +118,7 @@ def enroll():
 
 @app.route('/addToKairos', methods=['POST'])
 def addToKairos():
-    (balances, txns, total) = getUserTxnDetails("archana")
+    (balances, txns, total) = getUserTxnDetails("Arch")
     return render_template('index.html', balances=balances, txns=txns, total=total) 
 
 

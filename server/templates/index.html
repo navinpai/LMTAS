@@ -38,7 +38,7 @@
       </div>
   <div  class="table">
       {% for message in txns %}
-      <div class=flash>{{ message['txnPT'] }}</div>
+      <div class=flash>{{ message['txnPT'] }} <a href="/static/uploads/{{ message['txnImg'] }}">?</a></div>
       {% endfor %}
   </div>
   <div class="new">
