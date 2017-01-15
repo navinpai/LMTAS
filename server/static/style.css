@@ -10,7 +10,6 @@
 body {
     background: url("https://subtlepatterns.com/patterns/connect.png");
     font-family: 'Roboto', Helvetica, Arial, sans-serif;
-    color: #ff0000;
 }
 
 .title-bar {
@@ -116,4 +115,9 @@ body {
 .person {
     font-weight: bold;
     margin-right: 10px;
+}
+
+.pink-btn{
+    background-color: #FF4081 !important;
+    color: #ffffff;
 }
