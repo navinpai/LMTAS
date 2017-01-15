@@ -101,9 +101,12 @@ def home():
 def add():
     return render_template('add_new.html') 
 
-@app.route('/addToKairos', methods=['POST'])
+@app.route('/enroll')
 def enroll():
+    return render_template('enroll.html') 
 
+@app.route('/addToKairos', methods=['POST'])
+def addToKairos():
     (balances, txns, total) = getUserTxnDetails("archana")
     return render_template('index.html', balances=balances, txns=txns, total=total) 
 
@@ -142,15 +145,15 @@ def upload():
     
 @app.route('/enrollNew', methods=['POST'])
 def enrollNew():
-    imgData=request.form['file']
+    img=request.files['file']
     img_title = "ENR" + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
-    if imgData:
+    if img:
         filename = secure_filename(img_title)
-        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as fh:
-            fh.write(imgData.decode('base64'))
+        img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
     kairos_face.settings.app_id = constants.KAIROS_APPID
     kairos_face.settings.app_key = constants.KAIROS_APPKEY
-    subject_id, success = kairos_face.enroll_face(request.form['person'], 'testGal', file=os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    subject_id, success = kairos_face.enroll_face(request.form['person'], 'actors', file=os.path.join(app.config['UPLOAD_FOLDER'], filename))
     if success:
         return "Successfully enrolled " + subject_id
     else:

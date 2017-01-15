@@ -105,6 +105,11 @@ body {
     margin-left: 40%;
     margin-bottom: 25px;
 }
+.selector-text{
+    font-size: 20px;
+    padding-left: 10%;
+    margin-bottom: 25px;
+}
 
 .person {
     font-weight: bold;
