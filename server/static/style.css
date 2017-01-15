@@ -121,3 +121,8 @@ body {
     background-color: #FF4081 !important;
     color: #ffffff;
 }
+
+.rt-link{
+    float: right;
+    margin-right: 20px;
+}
