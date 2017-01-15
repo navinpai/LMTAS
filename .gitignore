@@ -89,3 +89,4 @@ ENV/
 .ropeproject
 
 constants.py
+google-services.json
