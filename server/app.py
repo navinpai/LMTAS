@@ -160,8 +160,8 @@ def upload():
 @app.route('/addNew', methods=['POST'])
 def addNew():
     img=request.files['file']
-    user = request.form['user']
-    img_title = "ENR" + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
+    user = request.form['person']
+    img_title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
     if img:
         filename = secure_filename(img_title)
         img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
