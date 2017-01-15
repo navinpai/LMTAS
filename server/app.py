@@ -52,12 +52,16 @@ def recognize_faces(img_file, faceCoords):
         cropped = imgMain.crop((faceRect['left'] - 10, faceRect['top'] - 10, faceRect['left'] + faceRect['width'] + 10, faceRect['top'] + faceRect['height'] + 10))
         tempImg = os.path.join(app.config['UPLOAD_FOLDER'], 'tempFace.jpg')
         cropped.save(tempImg)
-
-        result = kairos_identify(tempImg)
+        fallback = False
+        try:
+            result = kairos_identify(tempImg)
+        except:
+            fallback = True
+            result = kairos_identify(img_file)
         if len(result) > 0:
             identified_faces.add(result[0].subject)
 
-    return list(identified_faces), len(faceCoords)
+    return list(identified_faces), len(faceCoords), fallback
 
 def getUserTxnDetails(user):
     connection = get_db_connection()
@@ -127,7 +131,7 @@ def upload():
         CF.Key.set(KEY) 
         img_file = os.path.join(app.config['UPLOAD_FOLDER'], img_title)
         result = CF.face.detect(img_file)
-        (identified_people, num_of_faces) = recognize_faces(img_file, result)
+        (identified_people, num_of_faces, fallback) = recognize_faces(img_file, result)
 
         if num_of_faces < 1:
             message = 'Could not make out any faces! Try with better light or crisper photos'
@@ -137,7 +141,11 @@ def upload():
                 message = 'Success! Get Back to the party!'
                 make_db_entries(identified_people, user, float(amount), img_title)
             else:
-                message = 'Couldn\'t recognize all faces . Manual intervention required! :('
+                if(user not in identified_people):
+                    make_db_entries(identified_people + [user], user, float(amount), img_title)
+                    message = 'Was some work, but got it done!'
+                else:
+                    message = 'Couldn\'t recognize all faces . Manual intervention required! :('
     else:
         message = 'Dafuq? No Image Data Sent!'
     return json.dumps({"success": success, "message": message})
