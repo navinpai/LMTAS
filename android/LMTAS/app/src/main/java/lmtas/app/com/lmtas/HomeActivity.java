@@ -51,6 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         TextView tv = (TextView) findViewById(R.id.titleText);
+        tv.setTextColor(Color.argb(100, 255, 64, 129));
         Typeface prisma = Typeface.createFromAsset(getAssets(), "fonts/Prisma.ttf");
         tv.setTypeface(prisma);
 
