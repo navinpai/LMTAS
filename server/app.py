@@ -14,7 +14,7 @@ import kairos_face
 import constants
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads/'
+app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 
 def get_db_connection():
     return pymysql.connect(host='localhost', \
@@ -105,7 +105,7 @@ def getUserTxnDetails(user):
 
 @app.route('/home')
 def home():
-    (balances, txns, total) = getUserTxnDetails("archana")
+    (balances, txns, total) = getUserTxnDetails("Arch")
     return render_template('index.html', balances=balances, txns=txns, total=total) 
 
 @app.route('/add')
@@ -118,7 +118,7 @@ def enroll():
 
 @app.route('/addToKairos', methods=['POST'])
 def addToKairos():
-    (balances, txns, total) = getUserTxnDetails("archana")
+    (balances, txns, total) = getUserTxnDetails("Arch")
     return render_template('index.html', balances=balances, txns=txns, total=total) 
 
 
@@ -159,10 +159,9 @@ def upload():
 
 @app.route('/addNew', methods=['POST'])
 def addNew():
-    import pdb;pdb.set_trace()
     img=request.files['file']
-    user = request.form['user']
-    img_title = "ENR" + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
+    user = request.form['person']
+    img_title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
     if img:
         filename = secure_filename(img_title)
         img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -211,7 +210,6 @@ def enrollNew():
 @app.route("/test")
 def getMys():
     '''
-    import pdb;pdb.set_trace()
     connection = pymysql.connect(host='localhost', \
                          user=constants.MYSQL_USERNAME, \
                          password=constants.MYSQL_PASSWORD, \
