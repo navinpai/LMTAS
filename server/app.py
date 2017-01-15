@@ -142,11 +142,19 @@ def upload():
     
 @app.route('/enrollNew', methods=['POST'])
 def enrollNew():
-    headers = {'content-type': 'application/json', 'app_key': constants.KAIROS_APPKEY, 'app_id':constants.KAIROS_APPID}
-
-    body = {'subject_id': request.form['person'], 'image': request.form['file'], 'gallery':'testGal'}
-    r = requests.post('https://api.kairos.com/enroll', headers=headers,data=body) 
-    return r.text
+    imgData=request.form['file']
+    img_title = "ENR" + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
+    if imgData:
+        filename = secure_filename(img_title)
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as fh:
+            fh.write(imgData.decode('base64'))
+    kairos_face.settings.app_id = constants.KAIROS_APPID
+    kairos_face.settings.app_key = constants.KAIROS_APPKEY
+    subject_id, success = kairos_face.enroll_face(request.form['person'], 'testGal', file=os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    if success:
+        return "Successfully enrolled " + subject_id
+    else:
+        return "Failed to enroll. Try a different photo?"
 
 @app.route("/test")
 def getMys():
