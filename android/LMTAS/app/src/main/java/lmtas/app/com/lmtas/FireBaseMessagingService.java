@@ -1,9 +1,10 @@
-package lmtas.app.com.firebase;
+package lmtas.app.com.lmtas;
 
 /**
  * Created by navin on 1/14/17.
  */
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -33,6 +34,8 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle(remoteMessage.getFrom())
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setPriority(Notification.PRIORITY_HIGH)
                         .setContentText(remoteMessage.getNotification().getBody());
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
