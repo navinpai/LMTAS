@@ -14,7 +14,7 @@ import kairos_face
 import constants
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads/'
+app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 
 def get_db_connection():
     return pymysql.connect(host='localhost', \
@@ -159,7 +159,6 @@ def upload():
 
 @app.route('/addNew', methods=['POST'])
 def addNew():
-    import pdb;pdb.set_trace()
     img=request.files['file']
     user = request.form['user']
     img_title = "ENR" + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6)) + '.jpg'
@@ -211,7 +210,6 @@ def enrollNew():
 @app.route("/test")
 def getMys():
     '''
-    import pdb;pdb.set_trace()
     connection = pymysql.connect(host='localhost', \
                          user=constants.MYSQL_USERNAME, \
                          password=constants.MYSQL_PASSWORD, \
