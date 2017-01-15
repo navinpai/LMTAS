@@ -207,6 +207,10 @@ def enrollNew():
     else:
         return "Failed to enroll. Try a different photo?"
 
+@app.route('/view/<img>')
+def show_image(img):
+    return render_template('view.html', balances=balances, txns=txns, total=total) 
+
 @app.route("/test")
 def getMys():
     '''

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<title>LMTAS!</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link href="https://fonts.googleapis.com/css?family=Righteous|Roboto" rel="stylesheet">
+<body>
+<div class=page>
+    <div class="title-bar">
+      <span class="title-text">LMTAS!</span>
+      <div class=metanav>
+        Hey Archana | <a href="/logout">log out</a>
+      </div>
+    </div>
+
+  <div class="content">
+      <img src="/static/uploads/{{filename}}">
+  </div>
+
+  <div class="footer"> crafted with <span class="red">&hearts;</span> by <a href="http://twitter.com/navinpai">@navinpai</a></div>
+</div>
+<script>
+$(document).ready(function(){
+    $("#submit").click(function(e){
+       e.preventDefault(); 
+       
+       $.ajax({
+           type: "POST",
+           url: "/enrollNew",
+           data: new FormData($("#upload_form")[0]),
+           processData: false,
+           contentType: false,
+           success: function (data) {
+                   alert(data)
+               }
+       });
+    });
+});
+</script>
+</body>
+</html>
